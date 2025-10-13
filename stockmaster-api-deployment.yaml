@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stockmaster-api-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stockmaster-api
+  template:
+    metadata:
+      labels:
+        app: stockmaster-api
+    spec:
+      containers:
+      - name: stockmaster-api-container
+        image: angelnava14/stockmaster-api
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DATABASE_URL
+          value: "postgresql://angel_dev:brasiljr08@postgres-service:5432/stockmaster_db"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: stockmaster-api-service
+spec:
+  selector:
+    app: stockmaster-api
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
